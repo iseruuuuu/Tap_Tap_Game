@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiver/async.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tap_tap_app/children/dialog.dart';
 
 //TODO タイトル画面の作成　　　　　　　　　　　　　　　達成!!
@@ -43,14 +44,9 @@ class First extends State {
   int current = 30;
   bool TimerStart = false;
 
-  First({this.Stage2});
-  int Stage2;
-
-
 
   void _Pincrement() {
     setState(() {
-      //もし、数字が0になったら、、、
       if (Playerscore == 0) {
         showDialog(
           context: context,
@@ -58,18 +54,19 @@ class First extends State {
             return const goodDialog();
           },
         );
-
         //TODO クリアすると、数字を１にして値を渡す。
         //TODO タイトルにも戻ったら、常に確認させる。
-
-        Stage2 = 1;
-        print(Stage2);
-      }else {
+        load3();
+      } else {
         Playerscore--;
-
       }
     });
   }
+
+  void initState() {
+    super.initState();
+  }
+
 
   void startTimer() {
     CountdownTimer countDownTimer = new CountdownTimer(
@@ -82,13 +79,12 @@ class First extends State {
       setState(() {
         if (Playerscore == 0) {
           sub.cancel();
-        }else{
+        } else {
           current = Time - duration.elapsed.inSeconds; //毎秒減らしていく
         }
       });
     });
 
-// ④終了時の処理
     sub.onDone(() {
       print("Done");
       if (Playerscore != 0) {
@@ -101,7 +97,7 @@ class First extends State {
         current == 30;
         Playerscore = 50;
         TimerStart = false;
-      }else {
+      } else {
         sub.cancel();
         current = 30;
       }
@@ -109,11 +105,11 @@ class First extends State {
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
         title: const Text('Level 1'),
-         automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false,
       ),
       body: new Center(
 
@@ -121,9 +117,8 @@ class First extends State {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
             Text('残り時間は：あと $current秒'
-              ,style: TextStyle(
+              , style: TextStyle(
                   fontSize: 30
               ),
             ),
@@ -139,16 +134,15 @@ class First extends State {
             SizedBox(height: 50,),
 
             ButtonTheme(
-              minWidth:width,
+              minWidth: width,
               height: height,
               child: RaisedButton(
                   child: Text('押せ！'
-                    ,style: TextStyle(fontSize: size,),
+                    , style: TextStyle(fontSize: size,),
                   ),
                   textColor: Colors.white,
-                  onPressed: (){
-                    if (current == 0) {
-                    }else{
+                  onPressed: () {
+                    if (current == 0) {} else {
                       _Pincrement();
                     }
                     if (TimerStart == false) {
@@ -162,5 +156,20 @@ class First extends State {
         ),
       ),
     );
+  }
+
+
+
+  //TODO 今のところは数をたせることができた。
+
+  //TODO 数字を渡せることができていない？？？
+
+
+  Future<void> load3() async {
+    //足した数字を記憶する。
+    final prefs = await SharedPreferences.getInstance();
+    int counter = (prefs.getInt('counter') ?? 0) + 1;
+    print('クリアしたよ。$counter回');
+    await prefs.setInt('counter', counter);
   }
 }

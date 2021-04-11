@@ -27,37 +27,34 @@ void main() {
 //TODO 文字の配列やデザイン　　　　　　　　　　　　　達成!!
 //TODO 画面遷移　　　　　　　　　　　　　　　　　　　達成!!
 //TODO 画面を縦に固定する。　　　　　　　　　　　　　達成!!
-
-
-
-//TODO 達成したら解放されるものをデータとして扱う
-
-
 //TODO shared_preferences: ^0.4.3を登録　　達成!!
 //TODO bool型を作成　　　　　　　　　　　　　　達成!!
 //TODO false--> 灰色　　　　　　　　　　　　　　達成!!
 //TODO false--> ボタンを押せないようにする　　　達成!!
 //TODO true---> 赤色　　　　　　　　　　　　　　達成!!
 //TODO true---> ボタンを押せる　　　　　　　　　達成!!
-//TODO MindMemoを参考にしてパクる　　　　　　　
-//TODO SetStateで常に変更する　　　　　　　　　達成!!
+//TODO MindMemoを参考にしてパクる　　　　　　　達成!!
+//TODO SetStateで常に変更する　　　　　　　　　達成!!!
 //TODO クリアするとtrueにする。　　　　　　　　　変更!!
+//TODO ・クリアすると値を増やしてsetStateで変化したらboolを変えてあげる　達成!!
+//TODo ・初めの値を0にする。　　　　　　　　　　　　　　　　　　　　　　　　達成!!
+//TODO ・クリアしたら値を1にしてあげる。　　　　　　　　　　　　　　　　　　達成!!
+//TODO ・数字を保存してtrue,falseを管理しても良さそう。。　　　　　　　　　達成!!
+//TODO 数字を保存する　　　達成!!
+//TODO 数字を出力する。　　達成!!
+//TODO 数字を書き換える。　達成!!
+//TODO 数字を反映する。　　達成!!
 
-//TODO ・クリアすると値を増やしてsetStateで変化したらboolを変えてあげる。
-//TODo ・初めの値を0にする。
-//TODO ・クリアしたら値を1にしてあげる。
-//TODO ・数字を保存してtrue,falseを管理しても良さそう。。
+
+//TODO 色の変化をボタンを押した時に変化させる。
+//TODO 色を保存する。(sharePrefrence)を使用して
 
 
 
-//TODO 数字を保存する
-//TODO 数字を出力する。
-//TODO 数字を書き換える。
-//TODO 数字を反映する。
+
 
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -88,8 +85,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final int Stage3;
   final int Stage999;
 
-  int _counter = 0;
-  bool _isRed = true;
   double width = 300;
   double height = 60;
   double size = 30;
@@ -101,6 +96,8 @@ class _MyHomePageState extends State<MyHomePage> {
   bool stage3 = false;
   bool stage999 = false;
 
+  int touch = 0;
+
 
 
   Future<void> save(key,bool) async {
@@ -108,46 +105,76 @@ class _MyHomePageState extends State<MyHomePage> {
     await prefs.setBool(key, bool);
   }
 
-  Future<void> save2() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setDouble('Stage2', 0);
-
-  }
-
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
-
-    if (Stage2 == 1) {
-      stage2 = true;
-    }
-
-    if (Stage3 == 1) {
-      stage3 = true;
-    }
-
-    if (Stage999 == 1) {
-      stage999 = true;
-    }
     //TODO 数字を保存 OR Boolを保存する　かきめる。。。
-
-
     //  stage2 = prefs.getBool('stage2');
     //  stage3 = prefs.getBool('stage3');
     //  stage999 = prefs.getBool('stage999');
 
+    /*
     print(stage1);
     //nullになっている
     print(stage2);
     print(stage3);
     print(stage999);
+     */
   }
 
   void initState() {
     super.initState();
     load();
-    print(Stage2);
-    print(Stage3);
-    print(Stage999);
+    load2();
+    selectColor2();
+   // print('$stage2 ssss');
+  }
+
+
+
+  Future<void> save2() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setDouble('Stage2', 0);
+    prefs.setDouble('Stage3', 0);
+    prefs.setDouble('Stage999', 0);
+  }
+
+  Future<void> load2() async {
+    //足した数字を記憶する。
+    final prefs = await SharedPreferences.getInstance();
+
+    int counter = (prefs.getInt('counter') ?? 0) + 0;
+    int counter2 = (prefs.getInt('counter2') ?? 0) + 0;
+    int counter3 = (prefs.getInt('counter3') ?? 0) + 0;
+
+  //  print('Pressed $counter times.');
+  //  print('Pressed $counter2 times.');
+  // print('Pressed $counter3 times.');
+
+    await prefs.setInt('counter', counter);
+    await prefs.setInt('counter2', counter2);
+    await prefs.setInt('counter3', counter3);
+
+    if (counter >= 1) {
+      stage2 = true;
+      print('$stage2 jjjhjhjh');
+      //TODO 色を変えたい
+      selectColor2();
+    }
+
+    if (counter2 >= 1) {
+      stage3 = true;
+      print(stage3);
+      //TODO 色を変えたい
+      selectColor3();
+    }
+
+    if (counter3 >= 1) {
+      stage999 = true;
+      print(stage999);
+      //TODO 色を変えたい
+      selectColor999();
+    }
+
   }
 
 
@@ -159,11 +186,8 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Text('超・連打ゲーム',style: TextStyle(
-              fontSize: size2,
+              fontSize: size2),
             ),
-            ),
-
-
             ButtonTheme(
               minWidth:width,
               height: height,
@@ -171,11 +195,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text('Level1'
                     ,style: TextStyle(fontSize: size,),
                   ),
-                  color: selectColor(),
+                  color: Colors.red,
                   textColor: Colors.white,
-                  onPressed: (){
-                    Navigator.of(context).pushNamed('/first');
-                  }
+                  onPressed:(){ Navigator.of(context).pushNamed('/first');}
               ),
             ),
 
@@ -189,18 +211,28 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   color: selectColor2(),
                   textColor: Colors.white,
-                  onPressed: (){
-                    if (stage2 == false) {
-                      //falseは、プレイできない。
-                      showDialog(
-                        context: context,
-                        builder: (_) {
-                          return const CannotDialog();
-                        },
-                      );
-                    }else{
-                      //プレイできる
-                      Navigator.of(context).pushNamed('/second');
+                  onPressed: () {
+                    if (touch == 0) {
+                      load2();
+                      //TODO 色を変えたい。
+
+                      //TODO 色を固定させたい。
+
+
+                      selectColor2();
+                      touch++;
+                      print(touch);
+                    } else {
+                      if (stage2 == false) {
+                        showDialog(
+                          context: context,
+                          builder: (_) {
+                            return const CannotDialog();
+                          },
+                        );
+                      } else {
+                        Navigator.of(context).pushNamed('/second');
+                      }
                     }
                   }
               ),
@@ -218,7 +250,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   textColor: Colors.white,
                   onPressed: (){
                     if (stage3 == false) {
-                      //falseは、プレイできない。
                       showDialog(
                         context: context,
                         builder: (_) {
@@ -226,13 +257,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         },
                       );
                     }else{
-                      //プレイできる
                       Navigator.of(context).pushNamed('/third');
                     }
                   }
               ),
             ),
-
 
             ButtonTheme(
               minWidth:width,
@@ -244,10 +273,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: selectColor999(),
                   textColor: Colors.white,
                   onPressed: (){
-
                     if (stage999 == false) {
-                      //falseは、プレイできない。
-                      //TODO ダイアログとかを出す？？
                       showDialog(
                         context: context,
                         builder: (_) {
@@ -255,29 +281,24 @@ class _MyHomePageState extends State<MyHomePage> {
                         },
                       );
                     }else{
-                      //プレイできる
                       Navigator.of(context).pushNamed('/last');
                     }
-
                   }
               ),
             ),
-
-            //Text('$_counter', style: Theme.of(context).textTheme.headline4,),
           ],
         ),
       ),
     );
   }
-
-
-  Color selectColor() {
-    if(stage1 == true) {
-      return Colors.red;
-    } else {
-      return Colors.grey;
-    }
+/*
+  void changeColor() {
+    DynamicTheme.of(context).setThemeData(new ThemeData(
+        primaryColor: Theme.of(context).primaryColor == Colors.indigo? Colors.red: Colors.indigo
+    ));
   }
+
+ */
 
   Color selectColor2() {
     if(stage2 == true) {
@@ -302,15 +323,4 @@ class _MyHomePageState extends State<MyHomePage> {
       return Colors.grey;
     }
   }
-
-
-
-  GamePlay() {
-    if (stage1 == false) {
-      _isRed = false;
-    }
-
-  }
-
-
 }
