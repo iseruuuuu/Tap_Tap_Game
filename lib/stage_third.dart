@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiver/async.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tap_tap_app/children/dialog.dart';
 
 //TODO タイトル画面の作成　　　　　　　　　　　　　　　達成!!
@@ -48,6 +49,7 @@ class Third extends State {
 
   void _Pincrement() {
     setState(() {
+
       //もし、数字が0になったら、、、
       if (Playerscore == 0) {
         showDialog(
@@ -56,6 +58,7 @@ class Third extends State {
             return const goodDialog();
           },
         );
+        load5();
       }else {
         Playerscore--;
       }
@@ -153,5 +156,12 @@ class Third extends State {
         ),
       ),
     );
+  }
+  Future<void> load5() async {
+    //足した数字を記憶する。
+    final prefs = await SharedPreferences.getInstance();
+    int counter3 = (prefs.getInt('counter3') ?? 0) + 1;
+    print('クリアしたよ。$counter3回');
+    await prefs.setInt('counter3', counter3);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiver/async.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tap_tap_app/children/dialog.dart';
 
 //TODO タイトル画面の作成　　　　　　　　　　　　　　　達成!!
@@ -56,6 +57,7 @@ class Second extends State {
             return const goodDialog();
           },
         );
+        load4();
       }else {
         Playerscore--;
       }
@@ -154,5 +156,13 @@ class Second extends State {
         ),
       ),
     );
+  }
+
+  Future<void> load4() async {
+    //足した数字を記憶する。
+    final prefs = await SharedPreferences.getInstance();
+    int counter2 = (prefs.getInt('counter2') ?? 0) + 1;
+    print('クリアしたよ。$counter2回');
+    await prefs.setInt('counte2r', counter2);
   }
 }

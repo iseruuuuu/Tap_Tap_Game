@@ -14,7 +14,7 @@ class goodDialog extends StatelessWidget {
       Text("ゲームクリア！",
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 40,
+          fontSize: 35,
         ),
       ),
       ),
@@ -31,7 +31,7 @@ class goodDialog extends StatelessWidget {
             style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,
-              fontSize: 20,
+              fontSize: 17,
             ),
           ),
         ),

@@ -46,9 +46,13 @@ void main() {
 //TODO 数字を反映する。　　達成!!
 
 
+
 //TODO 色の変化をボタンを押した時に変化させる。
 //TODO 色を保存する。(sharePrefrence)を使用して
+//TODO Level3,4,999にも同じように変更する。
 
+
+//TODO 更新ボタンを押すこと？？
 
 
 
@@ -126,7 +130,6 @@ class _MyHomePageState extends State<MyHomePage> {
     load();
     load2();
     selectColor2();
-   // print('$stage2 ssss');
   }
 
 
@@ -146,9 +149,9 @@ class _MyHomePageState extends State<MyHomePage> {
     int counter2 = (prefs.getInt('counter2') ?? 0) + 0;
     int counter3 = (prefs.getInt('counter3') ?? 0) + 0;
 
-  //  print('Pressed $counter times.');
-  //  print('Pressed $counter2 times.');
-  // print('Pressed $counter3 times.');
+    print('Pressed $counter times.');
+    print('Pressed $counter2 times.');
+    print('Pressed $counter3 times.');
 
     await prefs.setInt('counter', counter);
     await prefs.setInt('counter2', counter2);
@@ -156,26 +159,27 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (counter >= 1) {
       stage2 = true;
-      print('$stage2 jjjhjhjh');
       //TODO 色を変えたい
-      selectColor2();
+      //  selectColor2();
     }
 
     if (counter2 >= 1) {
       stage3 = true;
       print(stage3);
       //TODO 色を変えたい
-      selectColor3();
+      //   selectColor3();
     }
 
     if (counter3 >= 1) {
       stage999 = true;
       print(stage999);
       //TODO 色を変えたい
-      selectColor999();
+      // selectColor999();
     }
-
   }
+
+
+
 
 
   @override
@@ -186,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Text('超・連打ゲーム',style: TextStyle(
-              fontSize: size2),
+                fontSize: size2),
             ),
             ButtonTheme(
               minWidth:width,
@@ -209,30 +213,21 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text('Level2'
                     ,style: TextStyle(fontSize: size,),
                   ),
-                  color: selectColor2(),
+                  color: Colors.red,
                   textColor: Colors.white,
                   onPressed: () {
-                    if (touch == 0) {
-                      load2();
-                      //TODO 色を変えたい。
-
-                      //TODO 色を固定させたい。
-
-
-                      selectColor2();
-                      touch++;
-                      print(touch);
+                    load2();
+                    //TODO 色を変えたい。
+                    //TODO 色を固定させたい。
+                    if (stage2 == false) {
+                      showDialog(
+                        context: context,
+                        builder: (_) {
+                          return const CannotDialog();
+                        },
+                      );
                     } else {
-                      if (stage2 == false) {
-                        showDialog(
-                          context: context,
-                          builder: (_) {
-                            return const CannotDialog();
-                          },
-                        );
-                      } else {
-                        Navigator.of(context).pushNamed('/second');
-                      }
+                      Navigator.of(context).pushNamed('/second');
                     }
                   }
               ),
@@ -246,9 +241,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text('Level3'
                     ,style: TextStyle(fontSize: size,),
                   ),
-                  color: selectColor3(),
+                  color: Colors.red,
                   textColor: Colors.white,
                   onPressed: (){
+                    load2();
                     if (stage3 == false) {
                       showDialog(
                         context: context,
@@ -270,9 +266,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text('Level999'
                     ,style: TextStyle(fontSize: size,),
                   ),
-                  color: selectColor999(),
+                  color: Colors.red,
                   textColor: Colors.white,
                   onPressed: (){
+                    load2();
                     if (stage999 == false) {
                       showDialog(
                         context: context,
@@ -283,6 +280,24 @@ class _MyHomePageState extends State<MyHomePage> {
                     }else{
                       Navigator.of(context).pushNamed('/last');
                     }
+                  }
+              ),
+            ),
+
+
+            ButtonTheme(
+              minWidth:width,
+              height: height,
+              child: RaisedButton(
+                  child: Text('更新をする'
+                    ,style: TextStyle(fontSize: size,),
+                  ),
+                  color: Colors.blue,
+                  textColor: Colors.white,
+                  onPressed: () {
+                    setState(() {
+                      load2();
+                    });
                   }
               ),
             ),
@@ -298,7 +313,37 @@ class _MyHomePageState extends State<MyHomePage> {
     ));
   }
 
+
+  void saveColor(int r, int g ,int b, double opacity) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setInt('r', r);
+  prefs.setInt('g', g);
+  prefs.setInt('b', b);
+  prefs.setDouble('o', opacity);
+
+  }
+
+  getColor() async {
+    final prefs = await SharedPreferences.getInstance();
+    final r = prefs.getInt('r');
+    final g = prefs.getInt('g');
+    final b = prefs.getInt('b');
+    final opacity = prefs.getDouble('o');
+    return Color.fromRGBO(r, g, b, opacity);
+  }
+
  */
+
+
+
+
+
+
+
+
+
+
+
 
   Color selectColor2() {
     if(stage2 == true) {
